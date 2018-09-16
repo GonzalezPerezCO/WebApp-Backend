@@ -16,7 +16,8 @@ $app->get('/api', function (Request $request, Response $response) {
         }
         //$response = json_encode($arr);
     }
-    return $this->$response->withJson($arr);
+    $newResponse = $response->withJson($arr);
+    return $newResponse->withHeader('Content-type', 'application/json;charset=utf-8');
 });
 
 //Agregar estudiante
