@@ -10,7 +10,7 @@ $app->get('/api', function (Request $request, Response $response) {
     $this->logger->info("Slim-Skeleton '/api' route");
     $arr = array();
     $mysqli = conect();
-    $query = "SELECT * FROM tcupos";
+    $query = "SELECT * FROM tncupo";
     if ($resul = $mysqli->query($query)) {
         while ($row = $resul->fetch_assoc()) {
             $arr[] = $row;
@@ -26,11 +26,11 @@ $app->post('/api/estudiante', function (Request $request, Response $response) {
     $this->logger->info("Slim-Skeleton '/api/estudiante' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
-    $query = "CALL addEstud(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "CALL addEstud(?, ?, ?, ?)";
     //retrieve passw from request body and pass it to password_hash() function
     $hash = password_hash($input['password'], PASSWORD_DEFAULT);
     if ($stmt = $mysqli->prepare($query)) {
-        $stmt->bind_param('issisisisis', $input['reserva'], $input['nombre'], $input['codigo'], $input['carrera'], $input['semestre'], $input['email'], $input['documento'], $hash ,$input['bloqueado'], $input['observacion']);
+        $stmt->bind_param('ssis', $input['nombre'], $input['email'], $input['documento'], $hash);
         $stmt->execute();
         $stmt->close();
     }
@@ -38,7 +38,7 @@ $app->post('/api/estudiante', function (Request $request, Response $response) {
 
 //Agregar horario
 $app->post('/api/horario', function (Request $request, Response $response) {
- 
+
     $this->logger->info("Slim-Skeleton '/api/horario' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
@@ -47,7 +47,6 @@ $app->post('/api/horario', function (Request $request, Response $response) {
         $stmt->bind_param('iss', $input['hora'], $input['dia'], $input['email']);
         $stmt->execute();
         $stmt->close();
-        echo $mysqli->info;
     }
 });
 
@@ -55,30 +54,23 @@ $app->post('/api/horario', function (Request $request, Response $response) {
 $app->post('/login', function (Request $request, Response $response, array $args) {
 
     $input = $request->getParsedBody();
-    $arr = array();
     $mysqli = conect();
     $query = "SELECT * FROM testudiantes WHERE email = ?";
     $stmt = $mysqli->prepare($query);
     $stmt->bind_param("s", $input['email']);
     $stmt->execute();
     $resul = $stmt->get_result();
-    while ($row = $resul->fetch_object("Student")) {
-        $arr[] = $row;
-    }
+    $row = $resul->fetch_assoc();
     // verify email address.
-    if (!$arr) {
+    if (!$row) {
         return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);
     }
- 
     // verify password.
-    if (!password_verify($input['password'], $arr->password)) {
+    if (!password_verify($input['password'], $row['password'])) {
         return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);
     }
-
     $settings = $this->get('settings')['jwt']; // get settings array.
-    $key = base64_decode($settings['secret']);
-    $token = JWT::encode(['id' => $user->id, 'email' => $user->email], $key, "HS256");
-
+    $key = base64_decode($settings['secret']); // decode the secret key
+    $token = JWT::encode(['id' => $row['id'], 'email' => $row['email']], $key, "HS256");
     return $this->response->withJson(['token' => $token]);
-
 });
