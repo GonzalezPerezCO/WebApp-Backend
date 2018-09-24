@@ -14,6 +14,10 @@ require __DIR__ . '/../src/dependencies.php';
 
 require __DIR__ . '/../src/routes.php';
 
-$app->redirect('/', '/api', 301);
+$app->get('/', function (Request $request, Response $response) {
+	$response->write("No hay nada en esta ruta");
+
+	return $response;
+});
 
 $app->run();
