@@ -1,8 +1,21 @@
-<?php
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
+<?php
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Firebase\JWT\JWT;
+
+
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response;
+});
+
+$app->add(function ($req, $res, $next) {
+    $response = $next($req, $res);
+    return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', ' Origin, X-Requested-With, Content-Type, Accept, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+});
 
 //Traer cupos 
 $app->get('/api', function (Request $request, Response $response) {
@@ -73,4 +86,9 @@ $app->post('/login', function (Request $request, Response $response, array $args
     $key = base64_decode($settings['secret']); // decode the secret key
     $token = JWT::encode(['id' => $row['id'], 'email' => $row['email']], $key, "HS256");
     return $this->response->withJson(['token' => $token]);
+});
+
+$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
+    $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
+    return $handler($req, $res);
 });
