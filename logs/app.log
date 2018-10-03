@@ -1,0 +1,8 @@
+[2018-10-02 23:23:51] slim-app.INFO: Slim-Skeleton '/api/estudiante' route [] {"uid":"3cd5201"}
+[2018-10-02 23:34:22] slim-app.INFO: Slim-Api '/api' route [] {"uid":"1b013ff"}
+[2018-10-02 23:35:34] slim-app.INFO: Slim-Api '/api/horario' route [] {"uid":"453dd86"}
+[2018-10-02 23:36:15] slim-app.INFO: Slim-Api '/api/horario' route [] {"uid":"eac68f3"}
+[2018-10-02 23:41:22] slim-app.INFO: Slim-Api '/api' route [] {"uid":"f203a6b"}
+[2018-10-02 23:41:30] slim-app.INFO: Slim-Api '/api/horario' route [] {"uid":"6c1323a"}
+[2018-10-02 23:43:47] slim-app.INFO: Slim-Api '/api/horario' route [] {"uid":"0d6b140"}
+[2018-10-02 23:46:45] slim-app.INFO: Slim-Api '/api/estudiante' route [] {"uid":"ca01be5"}

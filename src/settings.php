@@ -6,12 +6,12 @@ return [
 
         // jwt settings
         "jwt" => [
-            'secret' => base64_encode(openssl_random_pseudo_bytes(16)),
+            'secret' => base64_encode(random_bytes(16)),
         ],
 
         'logger' => [
             'name' => 'slim-app',
-            'path' => __DIR__ . '/../logs/error.log',
+            'path' => __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG
         ],
     ],

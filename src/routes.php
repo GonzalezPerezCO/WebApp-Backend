@@ -9,58 +9,65 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->add(function ($req, $res, $next) {
+/*$app->add(function ($req, $res, $next) {
     $response = $next($req, $res);
     return $response
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Headers', ' Origin, X-Requested-With, Content-Type, Accept, Authorization')
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-});
+});*/
 
 //Traer cupos 
 $app->get('/api', function (Request $request, Response $response) {
 
-    $this->logger->info("Slim-Skeleton '/api' route");
+    $this->logger->info("Slim-Api '/api' route");
     $arr = array();
     $mysqli = conect();
-    $query = "SELECT * FROM tncupo";
+    $query = "SELECT * FROM tcupos";
     if ($resul = $mysqli->query($query)) {
         while ($row = $resul->fetch_assoc()) {
             $arr[] = $row;
         }
     }
-    $newResponse = $response->withJson($arr);
-    return $newResponse->withHeader('Content-type', 'application/json;charset=utf-8');
+    return $response->withJson($arr)->withHeader('Content-type', 'application/json');
 });
 
 //Agregar estudiante
 $app->post('/api/estudiante', function (Request $request, Response $response) {
 
-    $this->logger->info("Slim-Skeleton '/api/estudiante' route");
+    $this->logger->info("Slim-Api '/api/estudiante' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addEstud(?, ?, ?, ?)";
     //retrieve passw from request body and pass it to password_hash() function
     $hash = password_hash($input['password'], PASSWORD_DEFAULT);
     if ($stmt = $mysqli->prepare($query)) {
-        $stmt->bind_param('ssis', $input['nombre'], $input['email'], $input['documento'], $hash);
-        $stmt->execute();
-        $stmt->close();
+        try {
+            $stmt->bind_param('ssis', $input['nombre'], $input['email'], $input['documento'], $hash);
+            $stmt->execute();
+        }catch (Exception $e){
+            $error = $e->getMessage();
+        }
     }
+    return $response->withJson($error)->withHeader('Content-type', 'application/json');
 });
 
 //Agregar horario
 $app->post('/api/horario', function (Request $request, Response $response) {
 
-    $this->logger->info("Slim-Skeleton '/api/horario' route");
+    $this->logger->info("Slim-Api '/api/horario' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addHorario(?, ?, ?)";
     if ($stmt = $mysqli->prepare($query)) {
-        $stmt->bind_param('iss', $input['hora'], $input['dia'], $input['email']);
-        $stmt->execute();
-        $stmt->close();
+        try {
+            $stmt->bind_param('iss', $input['hora'], $input['dia'], $input['email']);
+            $stmt->execute();
+        }catch (Exception $e){
+            $error = $e->getMessage();
+        }
     }
+    return $response->withJson($error)->withHeader('Content-type', 'application/json');
 });
 
 //Loguearse al sistema 

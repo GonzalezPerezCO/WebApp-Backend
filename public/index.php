@@ -1,5 +1,4 @@
 <?php 
-ini_set('display_errors', true);
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -15,7 +14,7 @@ require __DIR__ . '/../src/dependencies.php';
 require __DIR__ . '/../src/routes.php';
 
 $app->get('/', function (Request $request, Response $response) {
-	$response->write("No hay nada en esta ruta");
+	$response->write("Hello world!");
 
 	return $response;
 });
