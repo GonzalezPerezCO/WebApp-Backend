@@ -6,3 +6,9 @@
 [2018-10-02 23:41:30] slim-app.INFO: Slim-Api '/api/horario' route [] {"uid":"6c1323a"}
 [2018-10-02 23:43:47] slim-app.INFO: Slim-Api '/api/horario' route [] {"uid":"0d6b140"}
 [2018-10-02 23:46:45] slim-app.INFO: Slim-Api '/api/estudiante' route [] {"uid":"ca01be5"}
+[2018-10-04 22:20:05] slim-app.INFO: Slim-Api '/api' route [] {"uid":"09ae870"}
+[2018-10-04 22:27:23] slim-app.INFO: Slim-Api '/api' route [] {"uid":"91ac5ff"}
+[2018-10-04 23:34:36] slim-app.INFO: Slim-Api '/cupos' route [] {"uid":"11a21ec"}
+[2018-10-04 23:35:22] slim-app.INFO: Slim-Api '/estudiante' route [] {"uid":"0107104"}
+[2018-10-04 23:35:41] slim-app.INFO: Slim-Api '/horario' route [] {"uid":"3a6cbb5"}
+[2018-10-04 23:38:55] slim-app.INFO: Slim-Api '/horario' route [] {"uid":"b7792d9"}
