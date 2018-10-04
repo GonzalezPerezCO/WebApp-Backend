@@ -1,4 +1,3 @@
-
 <?php
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -9,18 +8,10 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
 
-/*$app->add(function ($req, $res, $next) {
-    $response = $next($req, $res);
-    return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Headers', ' Origin, X-Requested-With, Content-Type, Accept, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-});*/
-
 //Traer cupos 
-$app->get('/api', function (Request $request, Response $response) {
+$app->get('/cupos', function (Request $request, Response $response) {
 
-    $this->logger->info("Slim-Api '/api' route");
+    $this->logger->info("Slim-Api '/cupos' route");
     $arr = array();
     $mysqli = conect();
     $query = "SELECT * FROM tcupos";
@@ -33,9 +24,9 @@ $app->get('/api', function (Request $request, Response $response) {
 });
 
 //Agregar estudiante
-$app->post('/api/estudiante', function (Request $request, Response $response) {
+$app->post('/estudiante', function (Request $request, Response $response) {
 
-    $this->logger->info("Slim-Api '/api/estudiante' route");
+    $this->logger->info("Slim-Api '/estudiante' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addEstud(?, ?, ?, ?)";
@@ -53,9 +44,9 @@ $app->post('/api/estudiante', function (Request $request, Response $response) {
 });
 
 //Agregar horario
-$app->post('/api/horario', function (Request $request, Response $response) {
+$app->post('/horario', function (Request $request, Response $response) {
 
-    $this->logger->info("Slim-Api '/api/horario' route");
+    $this->logger->info("Slim-Api '/horario' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addHorario(?, ?, ?)";
