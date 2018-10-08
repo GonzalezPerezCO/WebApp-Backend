@@ -29,12 +29,12 @@ $app->post('/estudiante', function (Request $request, Response $response) {
     $this->logger->info("Slim-Api '/estudiante' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
-    $query = "CALL addEstud(?, ?, ?, ?)";
+    $query = "CALL addEstud(?, ?, ?, ?, ?)";
     //retrieve passw from request body and pass it to password_hash() function
     $hash = password_hash($input['password'], PASSWORD_DEFAULT);
     if ($stmt = $mysqli->prepare($query)) {
         try {
-            $stmt->bind_param('ssis', $input['nombre'], $input['email'], $input['documento'], $hash);
+            $stmt->bind_param('ssiss', $input['nombre'], $input['apellido'], $input['codigo'], $input['email'], $hash);
             $stmt->execute();
         }catch (Exception $e){
             $error = $e->getMessage();
