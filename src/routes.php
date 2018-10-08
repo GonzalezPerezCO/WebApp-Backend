@@ -49,10 +49,10 @@ $app->post('/horario', function (Request $request, Response $response) {
     $this->logger->info("Slim-Api '/horario' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
-    $query = "CALL addHorario(?, ?, ?)";
+    $query = "CALL addHorario(?, ?, ?, ?)";
     if ($stmt = $mysqli->prepare($query)) {
         try {
-            $stmt->bind_param('iss', $input['hora'], $input['dia'], $input['email']);
+            $stmt->bind_param('issi', $input['hora'], $input['dia'], $input['email'], $input['turno']);
             $stmt->execute();
         }catch (Exception $e){
             $error = $e->getMessage();
