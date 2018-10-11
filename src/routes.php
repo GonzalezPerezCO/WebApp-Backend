@@ -10,9 +10,7 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 //Traer cupos 
 $app->get('/cupos', function (Request $request, Response $response) {
-
-    $this->logger->info("Slim-Api '/cupos' route");
-    $arr = array();
+    //$this->logger->info("Slim-Api '/cupos' route");
     $mysqli = conect();
     $query = "SELECT * FROM tcupos";
     if ($resul = $mysqli->query($query)) {
@@ -25,16 +23,17 @@ $app->get('/cupos', function (Request $request, Response $response) {
 
 //Agregar estudiante
 $app->post('/estudiante', function (Request $request, Response $response) {
-
-    $this->logger->info("Slim-Api '/estudiante' route");
+    //$this->logger->info("Slim-Api '/estudiante' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addEstud(?, ?, ?, ?, ?)";
     //retrieve passw from request body and pass it to password_hash() function
     $hash = password_hash($input['password'], PASSWORD_DEFAULT);
+    $fname = strtoupper($input['nombre']);
+    $lname = strtoupper($input['apellido']);
     if ($stmt = $mysqli->prepare($query)) {
         try {
-            $stmt->bind_param('ssiss', $input['nombre'], $input['apellido'], $input['codigo'], $input['email'], $hash);
+            $stmt->bind_param('ssiss', $fname, $lname, $input['codigo'], $input['email'], $hash);
             $stmt->execute();
         }catch (Exception $e){
             $error = $e->getMessage();
@@ -45,8 +44,7 @@ $app->post('/estudiante', function (Request $request, Response $response) {
 
 //Agregar horario
 $app->post('/horario', function (Request $request, Response $response) {
-
-    $this->logger->info("Slim-Api '/horario' route");
+    //$this->logger->info("Slim-Api '/horario' route");
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addHorario(?, ?, ?, ?)";
