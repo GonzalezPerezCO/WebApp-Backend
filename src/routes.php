@@ -22,14 +22,18 @@ $app->get('/cupos', function (Request $request, Response $response) {
 });
 
 //Traer horario
-$app->get('/horario', function (Request $request, Response $response) {
+$app->get('/horario/{email}', function (Request $request, Response $response, $args) {
     
     $mysqli = conect();
     $query = "SELECT * FROM thorarios WHERE email = ?";
-    if ($resul = $mysqli->query($query)) {
-        while ($row = $resul->fetch_assoc()) {
-            $arr[] = $row;
-        }
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param("s", $args['email']);
+    $stmt->execute();
+    $resul = $stmt->get_result();
+    if ($resul->num_rows === 0) 
+        $arr[] = ['error' => true, 'message' => 'No rows', 'email' => $args[email]];
+    while ($row = $resul->fetch_assoc()) {
+        $arr[] = $row;
     }
     return $response->withJson($arr)->withHeader('Content-type', 'application/json');
 });
@@ -73,7 +77,7 @@ $app->post('/horario', function (Request $request, Response $response) {
 });
 
 //Loguearse al sistema 
-$app->post('/login', function (Request $request, Response $response, array $args) {
+$app->post('/login', function (Request $request, Response $response) {
 
     $input = $request->getParsedBody();
     $mysqli = conect();
