@@ -10,7 +10,7 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 //Traer cupos 
 $app->get('/cupos', function (Request $request, Response $response) {
-    
+
     $mysqli = conect();
     $query = "SELECT * FROM tcupos";
     if ($resul = $mysqli->query($query)) {
@@ -36,7 +36,7 @@ $app->get('/horario', function (Request $request, Response $response) {
 
 //Agregar estudiante
 $app->post('/estudiante', function (Request $request, Response $response) {
-    
+
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addEstud(?, ?, ?, ?, ?)";
@@ -57,7 +57,7 @@ $app->post('/estudiante', function (Request $request, Response $response) {
 
 //Agregar horario
 $app->post('/horario', function (Request $request, Response $response) {
-    
+
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addHorario(?, ?, ?)";
