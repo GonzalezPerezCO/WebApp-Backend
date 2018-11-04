@@ -10,9 +10,7 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 //Traer cupos 
 $app->get('/cupos', function (Request $request, Response $response) {
-
-    $this->logger->info("Slim-Api '/cupos' route");
-    $arr = array();
+    
     $mysqli = conect();
     $query = "SELECT * FROM tcupos";
     if ($resul = $mysqli->query($query)) {
@@ -23,18 +21,32 @@ $app->get('/cupos', function (Request $request, Response $response) {
     return $response->withJson($arr)->withHeader('Content-type', 'application/json');
 });
 
+//Traer horario
+$app->get('/horario', function (Request $request, Response $response) {
+    
+    $mysqli = conect();
+    $query = "SELECT * FROM thorarios WHERE email = ?";
+    if ($resul = $mysqli->query($query)) {
+        while ($row = $resul->fetch_assoc()) {
+            $arr[] = $row;
+        }
+    }
+    return $response->withJson($arr)->withHeader('Content-type', 'application/json');
+});
+
 //Agregar estudiante
 $app->post('/estudiante', function (Request $request, Response $response) {
-
-    $this->logger->info("Slim-Api '/estudiante' route");
+    
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addEstud(?, ?, ?, ?, ?)";
     //retrieve passw from request body and pass it to password_hash() function
     $hash = password_hash($input['password'], PASSWORD_DEFAULT);
+    $fname = strtoupper($input['nombre']);
+    $lname = strtoupper($input['apellido']);
     if ($stmt = $mysqli->prepare($query)) {
         try {
-            $stmt->bind_param('ssiss', $input['nombre'], $input['apellido'], $input['codigo'], $input['email'], $hash);
+            $stmt->bind_param('ssiss', $fname, $lname, $input['codigo'], $input['email'], $hash);
             $stmt->execute();
         }catch (Exception $e){
             $error = $e->getMessage();
@@ -45,14 +57,13 @@ $app->post('/estudiante', function (Request $request, Response $response) {
 
 //Agregar horario
 $app->post('/horario', function (Request $request, Response $response) {
-
-    $this->logger->info("Slim-Api '/horario' route");
+    
     $input = $request->getParsedBody();
     $mysqli = conect();
-    $query = "CALL addHorario(?, ?, ?, ?)";
+    $query = "CALL addHorario(?, ?, ?)";
     if ($stmt = $mysqli->prepare($query)) {
         try {
-            $stmt->bind_param('issi', $input['hora'], $input['dia'], $input['email'], $input['turno']);
+            $stmt->bind_param('iss', $input['hora'], $input['dia'], $input['email']);
             $stmt->execute();
         }catch (Exception $e){
             $error = $e->getMessage();
@@ -74,11 +85,11 @@ $app->post('/login', function (Request $request, Response $response, array $args
     $row = $resul->fetch_assoc();
     // verify email address.
     if (!$row) {
-        return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);
+        return $this->response->withJson(['error' => true, 'message' => 'Email o contraseña incorrectos.']);
     }
     // verify password.
     if (!password_verify($input['password'], $row['password'])) {
-        return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);
+        return $this->response->withJson(['error' => true, 'message' => 'Email o contraseña incorrectos.']);
     }
     $settings = $this->get('settings')['jwt']; // get settings array.
     $key = base64_decode($settings['secret']); // decode the secret key
