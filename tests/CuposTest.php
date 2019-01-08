@@ -21,11 +21,11 @@ class CuposTest extends TestCase {
         $response = $this->client->request('GET', 'cupos');
         $this->assertEquals(200, $response->getStatusCode());
         
-        $contentType = $response->getHeaders()["Content-Type"];
+        $contentType = $response->getHeader('Content-Type');
         $this->assertContains("application/json", $contentType);
         
         $cupos = json_decode($response->getBody(), true);
-        $this->assertGreaterThanOrEqual($cupos[8]["Jueves"], "20");
+        $this->assertGreaterThanOrEqual($cupos[8]["JUEVES"], "20");
     }
 
     public function testOnlyGetAllowed(){

@@ -16,16 +16,24 @@ class EstudianteTest extends TestCase {
         ]);
     }
 
+    /*Esta prueba verifica que al agregar un nuevo estudiante 
+      se deben pasar sus datos una sola vez, de otra forma se 
+      genera un error de estudiante duplicado */
     public function testPostEstudiante(){
 
-        $response = $this->client->request('POST', 'estudiante');
+        $response = $this->client->request('POST', 'estudiante', 
+            ['form_params' => [
+                'nombre' => 'andres',
+                'apellido' => 'correa',
+                'codigo' => 975310,
+                'email' => 'andres.correa@mail.com',
+                'password' => '5up3r'
+            ]
+        ]);
         $this->assertEquals(200, $response->getStatusCode());
-        //send the stud data in the body as json
-        $contentLength = $response->getHeaders()["Content-Length"];
-        $this->assertEquals("4", $contentLength);
 
-        $body = $response->getBody();
-        //$this->assertContains("null", $body);
+        $body = json_decode($response->getBody(), true);
+        $this->assertSame(null, $body);
     }
 
     public function testPostWithoutData(){
@@ -33,7 +41,7 @@ class EstudianteTest extends TestCase {
         $response = $this->client->request('POST', 'estudiante');
         $this->assertEquals(200, $response->getStatusCode());
         
-        $contentType = $response->getHeaders()["Content-Type"];
+        $contentType = $response->getHeader('Content-Type');
         $this->assertContains("application/json", $contentType);
         
         $msg = json_decode($response->getBody(), true);
@@ -47,6 +55,10 @@ class EstudianteTest extends TestCase {
         $this->assertEquals(404, $response->getStatusCode());
 
         $response = $this->client->request('PUT', 'estudiante', 
+        ['http_errors' => false]);
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $response = $this->client->request('GET', 'login', 
         ['http_errors' => false]);
         $this->assertEquals(404, $response->getStatusCode());
     }

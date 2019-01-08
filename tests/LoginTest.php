@@ -20,18 +20,42 @@ class LoginTest extends TestCase {
 
         $response = $this->client->request('POST', 'login');
         $this->assertEquals(200, $response->getStatusCode());
-    }
 
-    public function testPostLogin(){
-
-        $response = $this->client->request('POST', 'login');
-        $this->assertEquals(200, $response->getStatusCode());
-        
+        $result = json_decode($response->getBody(), true);
+        $this->assertContains("error", $result);
     }
     
-    public function testNoGetAllowed(){
+    /* Esta prueba muestra que sucede cuando un usuario se autentica
+       correctamente al sistema y obtiene ingreso, va a fallar si se 
+       corre antes que testPostEstudiante y arroja un error de datos
+       de usuario incorrectos pues el usuario todavia no existe  */
+    public function testPostLogin(){
 
-        $response = $this->client->request('GET', 'login');
+        $response = $this->client->request('POST', 'login', 
+            ['form_params' => [
+                'email' => 'andres.correa@mail.com',
+                'password' => '5up3r'
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        
+        $result = json_decode($response->getBody(), true);
+        $token = strlen($result["token"]);
+        $this->assertEquals(140, $token);
+    }
+    
+    public function testNoOtherMethodsAllowed(){
+
+        $response = $this->client->request('GET', 'login', 
+        ['http_errors' => false]);
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $response = $this->client->request('PUT', 'login', 
+        ['http_errors' => false]);
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $response = $this->client->request('DELETE', 'estudiante', 
+        ['http_errors' => false]);
         $this->assertEquals(404, $response->getStatusCode());
     }
 }

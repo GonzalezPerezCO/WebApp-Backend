@@ -18,15 +18,39 @@ class HorarioTest extends TestCase {
 
     public function testGetHorarioWithEmail(){
 
-        $response = $this->client->request('GET', 'horario');
+        $response = $this->client->request('GET', 'horario/prueba@mail.com');
         $this->assertEquals(200, $response->getStatusCode());
         
+        $contentType = $response->getHeader('Content-Type');
+        $this->assertContains("application/json", $contentType);
+    }
+    
+    public function testGetHorarioWithoutEmail(){
+        
+        $response = $this->client->request('GET', 'horario', 
+        ['http_errors' => false]);
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $contentLength = $response->getHeader('Content-Length');
+        $this->assertSame("917", $contentLength[0]);
     }
 
+    /*Esta prueba muestra que para agregar un nuevo turno debe 
+      existir el estudiante y el dia y hora solo se puede escoger 
+      una vez, de lo contrario se genera un error al agregar horario */
     public function testPostHorario(){
 
-        $response = $this->client->request('POST', 'horario');
+        $response = $this->client->request('POST', 'horario', 
+            ['form_params' => [
+                'hora' => 11,
+                'dia' => 'miercoles',
+                'email' => 'andres.correa@mail.com'
+            ]
+        ]);
         $this->assertEquals(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody(), true);
+        $this->assertSame(null, $body);
     }
 
     public function testPostHorarioWithoutData(){
@@ -34,7 +58,10 @@ class HorarioTest extends TestCase {
         $response = $this->client->request('POST', 'horario');
         $this->assertEquals(200, $response->getStatusCode());
 
-        $contentType = $response->getHeaders()["Content-Type"];
+        $contentType = $response->getHeader('Content-Type');
         $this->assertContains("application/json", $contentType);
+
+        $msg = json_decode($response->getBody(), true);
+        $this->assertContains("error", $msg);
     }
 }

@@ -46,11 +46,9 @@ $app->post('/estudiante', function (Request $request, Response $response) {
     $query = "CALL addEstud(?, ?, ?, ?, ?)";
     //retrieve passw from request body and pass it to password_hash() function
     $hash = password_hash($input['password'], PASSWORD_DEFAULT);
-    $fname = strtoupper($input['nombre']);
-    $lname = strtoupper($input['apellido']);
     if ($stmt = $mysqli->prepare($query)) {
         try {
-            $stmt->bind_param('ssiss', $fname, $lname, $input['codigo'], $input['email'], $hash);
+            $stmt->bind_param('ssiss', $input['nombre'], $input['apellido'], $input['codigo'], $input['email'], $hash);
             $stmt->execute();
         }catch (Exception $e){
             $error = $e->getMessage();
@@ -65,6 +63,7 @@ $app->post('/horario', function (Request $request, Response $response) {
     $input = $request->getParsedBody();
     $mysqli = conect();
     $query = "CALL addHorario(?, ?, ?)";
+
     if ($stmt = $mysqli->prepare($query)) {
         try {
             $stmt->bind_param('iss', $input['hora'], $input['dia'], $input['email']);
