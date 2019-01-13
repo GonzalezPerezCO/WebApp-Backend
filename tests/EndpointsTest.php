@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-class EndpointsTest extends BaseTest {
+class EndpointsTest extends BaseCase {
 
     public function testCupos(){
 
@@ -12,7 +12,7 @@ class EndpointsTest extends BaseTest {
         $this->assertContains('OK', $response->getReasonPhrase());
     }
 
-    public function testHorarioConEmail(){
+    public function testHorarioWithEmail(){
 
         $response = $this->runApp('GET', '/horario', ['test@mail.com']);
         

@@ -8,8 +8,8 @@ use Slim\Http\Response;
 use Slim\Http\Environment;
 use PHPUnit\Framework\TestCase;
 
-class BaseTest extends TestCase {
-
+class BaseCase extends TestCase {
+    
     public function runApp($requestMethod, $requestUri, $requestData = null){
 
         $environment = Environment::mock(

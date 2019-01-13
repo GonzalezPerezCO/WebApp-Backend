@@ -16,6 +16,12 @@ class CuposTest extends TestCase {
         ]);
     }
 
+    public function tearDown(){
+
+        $this->client = null;
+    }
+
+    /*** @covers ::getCupos */
     public function testGetCupo(){
 
         $response = $this->client->request('GET', 'cupos');
@@ -28,6 +34,7 @@ class CuposTest extends TestCase {
         $this->assertGreaterThanOrEqual($cupos[8]["JUEVES"], "20");
     }
 
+    /*** @coversNothing*/
     public function testOnlyGetAllowed(){
 
         $response = $this->client->request('POST', 'cupos', ['http_errors' => false]);

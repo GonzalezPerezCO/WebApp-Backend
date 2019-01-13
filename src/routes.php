@@ -4,10 +4,6 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Firebase\JWT\JWT;
 
 
-$app->options('/{routes:.+}', function ($request, $response, $args) {
-    return $response;
-});
-
 //Traer cupos 
 $app->get('/cupos', function (Request $request, Response $response) {
 
@@ -19,7 +15,7 @@ $app->get('/cupos', function (Request $request, Response $response) {
         }
     }
     return $response->withJson($arr)->withHeader('Content-type', 'application/json');
-});
+})->setName('getCupos');
 
 //Traer horario
 $app->get('/horario/{email}', function (Request $request, Response $response, $args) {
@@ -36,7 +32,7 @@ $app->get('/horario/{email}', function (Request $request, Response $response, $a
         $arr[] = $row;
     }
     return $response->withJson($arr)->withHeader('Content-type', 'application/json');
-});
+})->setName('getHorario');
 
 //Agregar estudiante
 $app->post('/estudiante', function (Request $request, Response $response) {
@@ -55,7 +51,7 @@ $app->post('/estudiante', function (Request $request, Response $response) {
         }
     }
     return $response->withJson($error)->withHeader('Content-type', 'application/json');
-});
+})->setName('postEstudiante');
 
 //Agregar horario
 $app->post('/horario', function (Request $request, Response $response) {
@@ -73,7 +69,7 @@ $app->post('/horario', function (Request $request, Response $response) {
         }
     }
     return $response->withJson($error)->withHeader('Content-type', 'application/json');
-});
+})->setName('postHorario');
 
 //Loguearse al sistema 
 $app->post('/login', function (Request $request, Response $response) {
@@ -98,9 +94,6 @@ $app->post('/login', function (Request $request, Response $response) {
     $key = base64_decode($settings['secret']); // decode the secret key
     $token = JWT::encode(['id' => $row['id'], 'email' => $row['email']], $key, "HS256");
     return $this->response->withJson(['token' => $token]);
-});
+})->setName('login');
 
-$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
-    $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
-    return $handler($req, $res);
-});
+

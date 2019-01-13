@@ -16,9 +16,15 @@ class EstudianteTest extends TestCase {
         ]);
     }
 
+    public function tearDown(){
+
+        $this->client = null;
+    }
+
     /*Esta prueba verifica que al agregar un nuevo estudiante 
       se deben pasar sus datos una sola vez, de otra forma se 
-      genera un error de estudiante duplicado */
+      genera un error de estudiante duplicado 
+      @covers ::postEstudiante  */
     public function testPostEstudiante(){
 
         $response = $this->client->request('POST', 'estudiante', 
@@ -36,6 +42,7 @@ class EstudianteTest extends TestCase {
         $this->assertSame(null, $body);
     }
 
+    /*** @coversNothing */
     public function testPostWithoutData(){
 
         $response = $this->client->request('POST', 'estudiante');
@@ -48,6 +55,7 @@ class EstudianteTest extends TestCase {
         $this->assertContains("cannot be null", $msg);
     }
 
+    /*** @coversNothing */
     public function testOnlyPostAllowed(){
 
         $response = $this->client->request('DELETE', 'estudiante', 

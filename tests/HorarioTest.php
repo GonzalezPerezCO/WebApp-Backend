@@ -16,6 +16,12 @@ class HorarioTest extends TestCase {
         ]);
     }
 
+    public function tearDown(){
+
+        $this->client = null;
+    }
+
+    /*** @covers ::getHorario */
     public function testGetHorarioWithEmail(){
 
         $response = $this->client->request('GET', 'horario/prueba@mail.com');
@@ -25,6 +31,7 @@ class HorarioTest extends TestCase {
         $this->assertContains("application/json", $contentType);
     }
     
+    /*** @coversNothing */
     public function testGetHorarioWithoutEmail(){
         
         $response = $this->client->request('GET', 'horario', 
@@ -37,7 +44,8 @@ class HorarioTest extends TestCase {
 
     /*Esta prueba muestra que para agregar un nuevo turno debe 
       existir el estudiante y el dia y hora solo se puede escoger 
-      una vez, de lo contrario se genera un error al agregar horario */
+      una vez, de lo contrario se genera un error al agregar horario 
+      @covers ::postHorario */
     public function testPostHorario(){
 
         $response = $this->client->request('POST', 'horario', 
@@ -53,6 +61,7 @@ class HorarioTest extends TestCase {
         $this->assertSame(null, $body);
     }
 
+    /*** @coversNothing */
     public function testPostHorarioWithoutData(){
 
         $response = $this->client->request('POST', 'horario');

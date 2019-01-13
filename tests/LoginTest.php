@@ -16,6 +16,12 @@ class LoginTest extends TestCase {
         ]);
     }
 
+    public function tearDown(){
+
+        $this->client = null;
+    }
+
+    /*** @coversNothing */
     public function testPostLoginWithoutData(){ 
 
         $response = $this->client->request('POST', 'login');
@@ -28,7 +34,8 @@ class LoginTest extends TestCase {
     /* Esta prueba muestra que sucede cuando un usuario se autentica
        correctamente al sistema y obtiene ingreso, va a fallar si se 
        corre antes que testPostEstudiante y arroja un error de datos
-       de usuario incorrectos pues el usuario todavia no existe  */
+       de usuario incorrectos pues el usuario todavia no existe  
+       @covers ::login */
     public function testPostLogin(){
 
         $response = $this->client->request('POST', 'login', 
@@ -44,6 +51,7 @@ class LoginTest extends TestCase {
         $this->assertEquals(140, $token);
     }
     
+    /*** @coversNothing */
     public function testNoOtherMethodsAllowed(){
 
         $response = $this->client->request('GET', 'login', 
