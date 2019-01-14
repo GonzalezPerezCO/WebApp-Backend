@@ -4,7 +4,6 @@ Esta aplicación funciona sobre un entorno LAMP, por lo que se asume que todos l
 (Apache, MariaDB, PHP) ya se encuentran instalados.
 
 ## Funcionamiento en entorno local
----------------------------------
 
 Para correr el proyecto primero es necesario tener instalado Composer (el gestor de dependencias de PHP),
 en caso de no tenerlo instalado en el entorno, puede seguir las instrucciones [en el sitio oficial](https://getcomposer.org/download/). 
@@ -65,3 +64,25 @@ RewriteRule ^ index.php [QSA,L]
 ```
 
 Ahora con estos cambios hechos reinicie el servidor web, y vuelva a probar visitando la dirección anteriormente mencionada.
+
+## Corriendo las pruebas
+
+Una vez dentro de la carpeta del proyecto, puede correr la suite de pruebas usando el siguiente comando 
+```
+./vendor/bin/phpunit
+```
+
+Este comando muestra los resultados generados cuando se corren todas las pruebas y genera un reporte de cuales pruebas fallaron y cuales no en el archivo *testdox.html* el cual se encuentra en la carpeta *tests*. 
+
+Por defecto si no se pasa ningún parámetro adicional, phpunit va a correr todas las pruebas que hacen parte del proyecto haciendo uso de las configuraciones que están en el archivo *phpunit.xml*. 
+
+Alternativamente, puede correr las pruebas individualmente haciendo referencia a que grupo de pruebas quiere ejecutar. Por ejemplo 
+```
+./vendor/bin/phpunit tests/HorarioTest
+```
+
+Le dice a phpunit que corra todas las pruebas que se encuentran en el archivo *HorarioTest.php*. 
+
+Como en la suite de pruebas están tanto las unitarias como las funcionales, la primera vez que se ejecuten las pruebas puede observar que todas pasan sin problema. Si se ejecutan una segunda vez sin cambio alguno, habrán algunas pruebas que van a presentar fallas y esto es debido a que usan datos de prueba para llamar a las funciones del API.
+
+Modifique los datos de prueba tanto en *testPostEstudiante* como en *testPostHorario* para que las pruebas vuelvan a correr con resultados exitosos.

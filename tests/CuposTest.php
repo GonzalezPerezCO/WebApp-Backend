@@ -38,9 +38,12 @@ class CuposTest extends TestCase {
     public function testOnlyGetAllowed(){
 
         $response = $this->client->request('POST', 'cupos', ['http_errors' => false]);
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(405, $response->getStatusCode());
 
         $response = $this->client->request('PUT', 'cupos', ['http_errors' => false]);
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(405, $response->getStatusCode());
+        
+        $response = $this->client->request('DELETE', 'cupos', ['http_errors' => false]);
+        $this->assertEquals(405, $response->getStatusCode());
     }
 }

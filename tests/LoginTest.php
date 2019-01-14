@@ -56,14 +56,14 @@ class LoginTest extends TestCase {
 
         $response = $this->client->request('GET', 'login', 
         ['http_errors' => false]);
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(405, $response->getStatusCode());
 
         $response = $this->client->request('PUT', 'login', 
         ['http_errors' => false]);
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(405, $response->getStatusCode());
 
         $response = $this->client->request('DELETE', 'estudiante', 
         ['http_errors' => false]);
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(405, $response->getStatusCode());
     }
 }

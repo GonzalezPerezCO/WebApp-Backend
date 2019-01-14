@@ -36,10 +36,10 @@ class HorarioTest extends TestCase {
         
         $response = $this->client->request('GET', 'horario', 
         ['http_errors' => false]);
-        $this->assertEquals(404, $response->getStatusCode());
-
+        $this->assertEquals(405, $response->getStatusCode());
+        
         $contentLength = $response->getHeader('Content-Length');
-        $this->assertSame("917", $contentLength[0]);
+        $this->assertSame("556", $contentLength[0]);
     }
 
     /*Esta prueba muestra que para agregar un nuevo turno debe 
