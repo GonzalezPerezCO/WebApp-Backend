@@ -39,12 +39,14 @@ $app->post('/estudiante', function (Request $request, Response $response) {
 
     $input = $request->getParsedBody();
     $mysqli = conect();
-    $query = "CALL addEstud(?, ?, ?, ?, ?)";
-    //retrieve passw from request body and pass it to password_hash() function
+    $query = "CALL addEstud(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $hash = password_hash($input['password'], PASSWORD_DEFAULT);
     if ($stmt = $mysqli->prepare($query)) {
         try {
-            $stmt->bind_param('ssiss', $input['nombre'], $input['apellido'], $input['codigo'], $input['email'], $hash);
+            $stmt->bind_param(
+            'ssiiisiss', $input['nombre'], $input['apellido'], $input['codigo'], 
+            $input['reserva'], $input['documento'], $input['carrera'], $input['semestre'],
+            $input['email'], $hash);
             $stmt->execute();
         }catch (Exception $e){
             $error = $e->getMessage();
@@ -82,16 +84,16 @@ $app->post('/login', function (Request $request, Response $response) {
     $stmt->execute();
     $resul = $stmt->get_result();
     $row = $resul->fetch_assoc();
-    // verify email address.
+
     if (!$row) {
         return $this->response->withJson(['error' => true, 'message' => 'Email o contraseña incorrectos.']);
     }
-    // verify password.
+
     if (!password_verify($input['password'], $row['password'])) {
         return $this->response->withJson(['error' => true, 'message' => 'Email o contraseña incorrectos.']);
     }
-    $settings = $this->get('settings')['jwt']; // get settings array.
-    $key = base64_decode($settings['secret']); // decode the secret key
+    $settings = $this->get('settings')['jwt']; 
+    $key = base64_decode($settings['secret']); 
     $token = JWT::encode(['id' => $row['id'], 'email' => $row['email']], $key, "HS256");
     return $this->response->withJson(['token' => $token]);
 })->setName('login');
